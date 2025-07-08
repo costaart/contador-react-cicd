@@ -10,8 +10,8 @@ function App() {
         <h1>🚀 Contador CI/CD - React</h1>
         <p className="number">{count}</p>
         <div className="buttons">
-          <button className="btn increment" onClick={() => setCount(count + 1)}>Incrementar</button>
-          <button className="btn decrement" onClick={() => setCount(count - 1)}>Decrementar</button>
+          <button className="btn increment" onClick={() => setCount(count + 1)}>Incrementar + </button>
+          <button className="btn decrement" onClick={() => setCount(count - 1)}>Decrementar - </button>
           <button className="btn reset" onClick={() => setCount(0)}>Resetar</button>
         </div>
       </div>

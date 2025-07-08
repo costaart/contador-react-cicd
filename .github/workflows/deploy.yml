@@ -55,3 +55,19 @@ jobs:
         aws apprunner update-service \
           --service-arn ${{ env.APP_RUNNER_ARN }} \
           --source-configuration file://update.json
+
+        echo "🔎 Aguardando App Runner finalizar deploy..."
+        while true; do
+          STATUS=$(aws apprunner describe-service --service-arn ${{ env.APP_RUNNER_ARN }} --query 'Service.Status' --output text)
+          echo "Status atual: $STATUS"
+          if [ "$STATUS" == "RUNNING" ]; then
+            echo "✅ Deploy finalizado com sucesso!"
+            break
+          elif [ "$STATUS" == "FAILED" ]; then
+            echo "❌ Deploy falhou!"
+            exit 1
+          else
+            echo "⏳ Aguardando... (10s)"
+            sleep 10
+          fi
+        done
