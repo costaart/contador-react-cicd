@@ -1,9 +1,7 @@
-version: "3.8"
-
 services:
   web:
     build: .
     container_name: contador-react
     ports:
-      - "8080:80"
+      - "3000:80"
     restart: unless-stopped
