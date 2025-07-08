@@ -9,3 +9,14 @@ variable "ecr_repository_name" {
   type        = string
   default     = "contador-react-cicd"
 }
+
+variable "ecr_access_role_arn" {
+  description = "IAM role ARN for App Runner to access ECR"
+  type        = string
+}
+
+variable "image_tag" {
+  description = "Image tag (ex: latest or commit SHA)"
+  type        = string
+  default     = "v1" 
+}
