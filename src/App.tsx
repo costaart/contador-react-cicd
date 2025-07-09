@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="app">
       <div className="card">
-        <h1>🚀 Contador CI/CD - React PZM Talk</h1>
+        <h1>🚀 Contador CI/CD - React PZM Talk 2</h1>
         <p className="number">{count}</p>
         <div className="buttons">
           <button className="btn increment" onClick={() => setCount(count + 1)}>Incrementar + </button>
