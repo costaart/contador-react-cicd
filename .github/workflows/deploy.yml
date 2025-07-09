@@ -12,7 +12,6 @@ jobs:
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-      APP_RUNNER_ARN: ${{ secrets.APP_RUNNER_ARN }}
 
     steps:
     - name: Checkout code
@@ -41,6 +40,16 @@ jobs:
       run: |
         docker push $ECR_REPOSITORY:$COMMIT_SHA
 
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Apply (create/update App Runner)
+      run: terraform apply -auto-approve -var="image_tag=${{ env.COMMIT_SHA }}"
+
+    - name: Get App Runner ARN from Terraform
+      id: get_arn
+      run: echo "SERVICE_ARN=$(terraform output -raw service_arn)" >> $GITHUB_ENV
+
     - name: Update App Runner service to new image
       run: |
         cat <<EOF > update.json
@@ -53,12 +62,12 @@ jobs:
         EOF
 
         aws apprunner update-service \
-          --service-arn ${{ env.APP_RUNNER_ARN }} \
+          --service-arn "$SERVICE_ARN" \
           --source-configuration file://update.json
 
         echo "🔎 Aguardando App Runner finalizar deploy..."
         while true; do
-          STATUS=$(aws apprunner describe-service --service-arn ${{ env.APP_RUNNER_ARN }} --query 'Service.Status' --output text)
+          STATUS=$(aws apprunner describe-service --service-arn "$SERVICE_ARN" --query 'Service.Status' --output text)
           echo "Status atual: $STATUS"
           if [ "$STATUS" == "RUNNING" ]; then
             echo "✅ Deploy finalizado com sucesso!"

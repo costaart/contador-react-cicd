@@ -7,3 +7,8 @@ output "service_url" {
   description = "URL pública do App Runner"
   value       = aws_apprunner_service.contador.service_url
 }
+
+output "service_arn" {
+  description = "ARN do App Runner Service"
+  value       = aws_apprunner_service.contador.arn
+}
